@@ -1,4 +1,5 @@
 import PDFDocument from '../../lib/document';
+import fs from 'fs';
 
 describe('PDFDocument', () => {
   describe('font option', () => {
@@ -44,6 +45,28 @@ describe('PDFDocument', () => {
       expect(() => new PDFDocument({ info: { Title: null } })).not.toThrow(
         new TypeError("Cannot read property 'toString' of null")
       );
+    });
+  });
+
+  describe('FontsMixin', () => {
+    describe('font', () => {
+      test('saves a default font to _fontFamilies', () => {
+        const doc = new PDFDocument();
+        doc.font('Helvetica');
+        expect(doc._fontFamilies['Helvetica']).toBeDefined();
+      });
+
+      test('saves a font passed as a buffer to _fontFamilies', () => {
+        const doc = new PDFDocument();
+        doc.font(fs.readFileSync('tests/fonts/Roboto-Regular.ttf'));
+        expect(doc._fontFamilies['Roboto-Regular']).toBeDefined();
+      });
+
+      test('saves a font passed as a buffer whose name is only "-" to _fontFamilies', () => {
+        const doc = new PDFDocument();
+        doc.font(fs.readFileSync('tests/fonts/Roboto-RegularBadName.ttf'));
+        expect(doc._fontFamilies['F2']).toBeDefined();
+      });
     });
   });
 });
