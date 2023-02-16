@@ -18,3 +18,4 @@ index.html
 yarn.lock
 rollup.config.js
 .eslintrc
+Dockerfile
